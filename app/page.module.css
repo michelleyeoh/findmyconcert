@@ -34,34 +34,21 @@
   grid-row-start: 2;
 }
 
-.main ol {
-  font-family: var(--font-geist-mono);
-  padding-left: 0;
-  margin: 0;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  list-style-position: inside;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.main li:not(:last-of-type) {
-  margin-bottom: 8px;
-}
 
-.main code {
-  font-family: inherit;
-  background: var(--gray-alpha-100);
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-weight: 600;
-}
 
 .ctas {
   display: flex;
   gap: 16px;
 }
 
-.ctas a {
+.ctas a,
+button.primary {
   appearance: none;
   border-radius: 128px;
   height: 48px;
@@ -80,15 +67,23 @@
   font-weight: 500;
 }
 
-a.primary {
+a.primary,
+button.primary {
   background: var(--foreground);
   color: var(--background);
   gap: 8px;
 }
 
+button.primary {
+  border: none;
+  font-family: inherit;
+  min-width: 120px;
+}
+
 a.secondary {
   border-color: var(--gray-alpha-200);
   min-width: 158px;
+  gap: 8px;
 }
 
 .footer {
@@ -109,7 +104,9 @@ a.secondary {
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
+
+  a.primary:hover,
+  button.primary:hover {
     background: var(--button-primary-hover);
     border-color: transparent;
   }
@@ -135,9 +132,7 @@ a.secondary {
     align-items: center;
   }
 
-  .main ol {
-    text-align: center;
-  }
+
 
   .ctas {
     flex-direction: column;

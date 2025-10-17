@@ -1,94 +1,81 @@
+'use client'
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useState } from "react";
 
 export default function Home() {
+  const [formData, setFormData] = useState({
+    zipcode: '',
+    artist: ''
+  });
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    //calls event search
+    const response = await fetch(`/api/events?zipcode=${formData.zipcode}&artist=${formData.artist}`);
+    const data = await response.json();
+    if (data.event) {
+      console.log('Artist:', data.event.artist)
+      console.log('Concert:', data.event.concertName);
+      console.log('Date:', data.event.date);
+      console.log('Venue:', data.event.venue.name);
+      console.log('Cheapest ticket:', data.event.cheapestTicket);
+      console.log('Parking:', data.event.parkingInfo);
+      console.log('Ticket Details:', data.event.ticketUrl);
+    } else {
+      console.log('No events found');
+    }
+    //reset form
+    setFormData({ zipcode: '', artist: '' });
+  }
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <div>
+          <h1>Find My Concert</h1>
+          <p>Discover concerts near you!</p>
+        </div>
 
         <div className={styles.ctas}>
           <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+            href="https://localhost:3000"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.secondary}
           >
-            Read our docs
+            <Image
+              className={styles.logo}
+              src="/spotify_logo.png"
+              alt="Spotify logo"
+              width={20}
+              height={20}
+            />
+            Sync with Spotify
           </a>
         </div>
+
+        <p>or</p>
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <label>
+            Artist:
+            <input type="text"
+              value={formData.artist}
+              onChange={(e) => setFormData({ ...formData, artist: e.target.value })} />
+          </label>
+          <label>
+            ZipCode:
+            <input type="text"
+              value={formData.zipcode}
+              onChange={(e) => setFormData({ ...formData, zipcode: e.target.value })} />
+          </label>
+          <button type="submit" className={styles.primary}>Find Now!</button>
+        </form>
       </main>
       <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        <p>made with &lt;3 by michelle</p>
       </footer>
     </div>
   );
