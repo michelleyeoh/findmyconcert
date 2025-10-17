@@ -27,12 +27,13 @@ function eventData(event: any, venue: any, parkingInfo: string, directions: any,
 }
 
 async function fetchEventDetails(eventId: string) {
-  // try {
-  //   const response = await fetch(`/api/event-details/${eventId}`);
-  //   return await response.json();
-  // } catch {
-  return { cheapestTicket: 'Price TBA', url: `https://www.ticketmaster.com/event/${eventId}` };
-  // }
+  try {
+    const baseUrl = process.env.BASE_URL;
+    const response = await fetch(`${baseUrl}/api/event-details/${eventId}`);
+    return await response.json();
+  } catch {
+    return { cheapestTicket: 'Price TBA', url: `https://www.ticketmaster.com/event/${eventId}` };
+  }
 }
 
 async function fetchDirections(zipcode: string, latitude: string, longitude: string) {
@@ -85,7 +86,7 @@ export async function GET(request: NextRequest) {
       `https://app.ticketmaster.com/discovery/v2/events.json?size=2&postalCode=${zipcode}&keyword=${artist}&apikey=${process.env.TICKETMASTER_KEY}`
     );
     if (!response.ok) {
-      throw new Error(`Failed to fetch data from Ticketmaster API: ${response.statusText}`);
+      throw new Error(`Failed to fetch events from Ticketmaster API: ${response.statusText}`);
     }
     const data = await response.json();
     const events = data._embedded?.events;
@@ -99,20 +100,6 @@ export async function GET(request: NextRequest) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       events.map((event: any) => processEvent(event, zipcode))
     );
-
-    // Server-side logging (will show in terminal)
-    console.log('=== EVENTS FOUND ===');
-    processedEvents.forEach((event, index) => {
-      console.log(`Event ${index + 1}:`);
-      console.log('Artist:', event.artist);
-      console.log('Concert:', event.concertName);
-      console.log('Date:', event.date);
-      console.log('Venue:', event.venue.name);
-      console.log('Cheapest ticket:', event.cheapestTicket);
-      console.log('Parking:', event.parkingInfo);
-      console.log('---');
-    });
-    console.log('==================');
 
     return NextResponse.json({ events: processedEvents });
   } catch (error) {
