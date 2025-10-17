@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: eventId } = await params;
 
   if (!eventId) {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch event details from Ticketmaster API: ${response.statusText}`);
+      throw new Error(`Failed to fetch event details from Ticketmaster API`);
     }
 
     const data = await response.json();

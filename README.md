@@ -7,4 +7,4 @@ View my project details: https://docs.google.com/document/d/1h6qnoXnPgu5QiN0vJdN
 
 ## 📊 Project Status
 
-Setting up system design
+Setting up backend

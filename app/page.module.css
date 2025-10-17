@@ -32,6 +32,7 @@
   flex-direction: column;
   gap: 32px;
   grid-row-start: 2;
+  align-items: center;
 }
 
 .form {
@@ -128,12 +129,6 @@ a.secondary {
     padding-bottom: 80px;
   }
 
-  .main {
-    align-items: center;
-  }
-
-
-
   .ctas {
     flex-direction: column;
   }
@@ -152,11 +147,5 @@ a.secondary {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
   }
 }

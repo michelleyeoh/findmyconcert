@@ -48,14 +48,15 @@ async function fetchDirections(zipcode: string, latitude: string, longitude: str
 }
 
 async function fetchVenueData(venueId: string) {
-  // if (!venueId) return { parkingInfo: 'Parking info not available' };
+  if (!venueId) return { parkingInfo: 'Venue info not available' };
 
-  // try {
-  //   const response = await fetch(`/api/venues/${venueId}`);
-  //   return await response.json();
-  // } catch {
-  return { parkingInfo: 'Parking info not available' };
-  // }
+  try {
+    const baseUrl = process.env.BASE_URL;
+    const response = await fetch(`${baseUrl}/api/venues/${venueId}`);
+    return await response.json();
+  } catch {
+    return { parkingInfo: 'Parking info not available' };
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
