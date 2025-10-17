@@ -12,20 +12,26 @@ export default function Home() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //calls event search
-    const response = await fetch(`/api/events?zipcode=${formData.zipcode}&artist=${formData.artist}`);
-    const data = await response.json();
-    if (data.event) {
-      console.log('Artist:', data.event.artist)
-      console.log('Concert:', data.event.concertName);
-      console.log('Date:', data.event.date);
-      console.log('Venue:', data.event.venue.name);
-      console.log('Cheapest ticket:', data.event.cheapestTicket);
-      console.log('Parking:', data.event.parkingInfo);
-      console.log('Ticket Details:', data.event.ticketUrl);
-    } else {
-      console.log('No events found');
+    try {
+      const response = await fetch(`/api/events?zipcode=${formData.zipcode}&artist=${formData.artist}`);
+      const data = await response.json();
+
+      if (data.events && data.events.length > 0) {
+        const event = data.events[0]; // test get first event
+        console.log('Artist:', event.artist)
+        console.log('Concert:', event.concertName);
+        console.log('Date:', event.date);
+        console.log('Venue:', event.venue.name);
+        console.log('Cheapest ticket:', event.cheapestTicket);
+        console.log('Parking:', event.parkingInfo);
+        console.log('Ticket Details:', event.ticketUrl);
+      } else {
+        console.log('No events found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
+
     //reset form
     setFormData({ zipcode: '', artist: '' });
   }
