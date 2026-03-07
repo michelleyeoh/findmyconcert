@@ -3,8 +3,10 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     zipcode: '',
     artist: ''
@@ -12,21 +14,33 @@ export default function Home() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!formData.artist.trim() || !formData.zipcode.trim()) {
+      alert('Please enter both artist and zipcode!');
+    return;
+  }
+
+    let latitude: string = '';
+    let longitude: string = '';
     try {
-      const response = await fetch(`/api/events?zipcode=${formData.zipcode}&artist=${formData.artist}`);
+      const response = await fetch(`https://api.zippopotam.us/us/${formData.zipcode}`);
+      const data = await response.json();
+      latitude = data.places[0].latitude;
+      longitude = data.places[0].longitude;
+      console.log(latitude, longitude);
+    } catch (error) {
+      console.error('Error fetching zipcode:', error);
+    }
+
+    try {
+      const response = await fetch(`/api/events?artist=${formData.artist}&zipcode=${formData.zipcode}&latitude=${latitude}&longitude=${longitude}`);
       const data = await response.json();
 
       if (data.events && data.events.length > 0) {
-        const event = data.events[0]; // test get first event
-        console.log('Artist:', event.artist)
-        console.log('Concert:', event.concertName);
-        console.log('Date:', event.date);
-        console.log('Venue:', event.venue.name);
-        console.log('Cheapest ticket:', event.cheapestTicket);
-        console.log('Parking:', event.parkingInfo);
-        console.log('Ticket Details:', event.ticketUrl);
+        sessionStorage.setItem('eventData', JSON.stringify(data.events));
+        router.push('/discover');
       } else {
         console.log('No events found');
+        //TODO: display not found popup
       }
     } catch (error) {
       console.error('Error:', error);

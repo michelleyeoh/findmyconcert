@@ -37,14 +37,15 @@ async function fetchEventDetails(eventId: string) {
 }
 
 async function fetchDirections(zipcode: string, latitude: string, longitude: string) {
-  // if (!latitude || !longitude) return { directions: 'Directions not available' };
+  if (!latitude || !longitude) return { directions: 'Directions not available' };
 
-  // try {
-  //   const response = await fetch(`/api/directions?origin=${zipcode}&latitude=${latitude}&longitude=${longitude}`);
-  //   return await response.json();
-  // } catch {
+  try {
+    const baseUrl = process.env.BASE_URL;
+    const response = await fetch(`${baseUrl}/api/directions?origin=${zipcode}&latitude=${latitude}&longitude=${longitude}`);
+    return await response.json();
+  } catch {
   return { directions: 'Direction info not available' };
-  // }
+  }
 }
 
 async function fetchVenueData(venueId: string) {
@@ -69,22 +70,24 @@ async function processEvent(event: any, zipcode: string) {
     fetchEventDetails(event.id)
   ]);
 
-  return eventData(event, venue, venueData.parkingInfo, directionsData.directions, eventDetails)
+  return eventData(event, venue, venueData.parkingInfo, directionsData, eventDetails)
 }
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const zipcode = searchParams.get('zipcode');
   const artist = searchParams.get('artist');
+  const latitude = searchParams.get('latitude');
+  const longitude = searchParams.get('longitude');
+  const zipcode = searchParams.get('zipcode');
 
-  if (!zipcode || !artist) {
-    return NextResponse.json({ error: 'Zipcode and artist are required' }, { status: 400 });
+  if (!artist || !latitude || !longitude || !zipcode) {
+    return NextResponse.json({ error: 'Valid zipcode and artist are required' }, { status: 400 });
   }
 
   try {
     // Get events from Ticketmaster API
     const response = await fetch(
-      `https://app.ticketmaster.com/discovery/v2/events.json?size=2&postalCode=${zipcode}&keyword=${artist}&apikey=${process.env.TICKETMASTER_KEY}`
+      `https://app.ticketmaster.com/discovery/v2/events.json?size=1&radius=500&unit=miles&latlong=${latitude},${longitude}&keyword=${artist}&apikey=${process.env.TICKETMASTER_KEY}`
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch events from Ticketmaster API: ${response.statusText}`);
@@ -96,13 +99,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ event: null });
     }
 
-    // Process event(s)
-    const processedEvents = await Promise.all(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      events.map((event: any) => processEvent(event, zipcode))
-    );
+    // Process event
+    const processedEvent = await processEvent(events[0], zipcode);
 
-    return NextResponse.json({ events: processedEvents });
+    return NextResponse.json({ events: [processedEvent] });
   } catch (error) {
     console.error('Error fetching data:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
