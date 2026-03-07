@@ -32,9 +32,9 @@ jobs:
 
       - name: Sync Environment Variables
         run: |
-          vercel env add TICKETMASTER_KEY production --force --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
-          vercel env add GOOGLE_MAPS_API_KEY production --force --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
-          vercel env add BASE_URL production --force --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
+          echo -n "${{ secrets.TICKETMASTER_KEY }}" | vercel env add TICKETMASTER_KEY production --force --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --project=${{ secrets.VERCEL_PROJECT_ID }}
+          echo -n "${{ secrets.GOOGLE_MAPS_API_KEY }}" | vercel env add GOOGLE_MAPS_API_KEY production --force --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --project=${{ secrets.VERCEL_PROJECT_ID }}
+          echo -n "${{ vars.DOMAIN_URL }}" | vercel env add BASE_URL production --force --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} --project=${{ secrets.VERCEL_PROJECT_ID }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
