@@ -11,6 +11,11 @@ jobs:
     environment:
       name: production
       url: ${{ vars.DOMAIN_URL }}
+    
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_TEAM_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -27,19 +32,12 @@ jobs:
 
       - name: Sync Environment Variables
         run: |
-          printf "${{ secrets.TICKETMASTER_KEY }}" | vercel env add TICKETMASTER_KEY production --force --token=${{ secrets.VERCEL_TOKEN }}
-          printf "${{ secrets.GOOGLE_MAPS_API_KEY }}" | vercel env add GOOGLE_MAPS_API_KEY production --force --token=${{ secrets.VERCEL_TOKEN }}
-
-          printf "${{ vars.DOMAIN_URL }}" | vercel env add BASE_URL production --force --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_TEAM_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          echo -n "${{ secrets.TICKETMASTER_KEY }}" | vercel env add TICKETMASTER_KEY production --force
+          echo -n "${{ secrets.GOOGLE_MAPS_API_KEY }}" | vercel env add GOOGLE_MAPS_API_KEY production --force
+          echo -n "${{ vars.DOMAIN_URL }}" | vercel env add BASE_URL production --force
 
       - name: Deploy Project to Vercel
-        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_TEAM_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel deploy --prod --yes
 
       - name: Success
         run: echo "🚀 Deploy successful 🚀 "
