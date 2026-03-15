@@ -41,8 +41,20 @@ async function fetchDirections(zipcode: string, latitude: string, longitude: str
 
   try {
     const baseUrl = process.env.BASE_URL;
-    const response = await fetch(`${baseUrl}/api/directions?origin=${zipcode}&latitude=${latitude}&longitude=${longitude}`);
-    return await response.json();
+    const [transitResponse, drivingResponse] = await Promise.all([
+      fetch(`${baseUrl}/api/directions?origin=${zipcode}&latitude=${latitude}&longitude=${longitude}&mode=transit`),
+      fetch(`${baseUrl}/api/directions?origin=${zipcode}&latitude=${latitude}&longitude=${longitude}&mode=driving`)
+    ]);
+
+    const [transitDirections, drivingDirections] = await Promise.all([
+      transitResponse.json(),
+      drivingResponse.json()
+    ]);
+
+    return {
+      transit: transitDirections,
+      driving: drivingDirections
+    };
   } catch {
   return { directions: 'Direction info not available' };
   }

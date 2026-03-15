@@ -5,6 +5,10 @@
     padding: 1.5rem;
     min-height: 100vh;
     box-sizing: border-box;
+
+    a{
+        text-decoration: underline;
+    }
 }
 
 .eventRow {
@@ -53,6 +57,30 @@
 
 .routeSummary {
     margin-top: 0.5rem;
+}
+
+.modeToggle {
+    display: inline-flex;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.modeButton {
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #334155;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.modeButtonActive {
+    background-color: black;
+    border: 1px solid #ffffff;
+    color: #ffffff;
 }
 
 .mapLink {
