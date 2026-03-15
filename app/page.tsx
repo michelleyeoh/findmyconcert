@@ -37,6 +37,7 @@ export default function Home() {
 
       if (data.events && data.events.length > 0) {
         sessionStorage.setItem('eventData', JSON.stringify(data.events));
+        sessionStorage.setItem('originZipcode', formData.zipcode);
         router.push('/discover');
       } else {
         console.log('No events found');
