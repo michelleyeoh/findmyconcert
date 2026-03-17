@@ -5,14 +5,17 @@ export async function GET(request: NextRequest) {
   const origin = searchParams.get('origin');
   const latitude = searchParams.get('latitude');
   const longitude = searchParams.get('longitude');
+  const mode = searchParams.get('mode') || 'transit';
+  const validMode = mode === 'driving' ? 'driving' : 'transit';
 
   if (!origin || !latitude || !longitude) {
     return NextResponse.json({ error: 'Origin, latitude, and longitude are required' }, { status: 400 });
   }
 
   try {
+    const transitDepartureTime = validMode === 'transit' ? '&departure_time=now' : '';
     const directionsResponse = await fetch(
-      `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${latitude},${longitude}&mode=${validMode}${transitDepartureTime}&alternatives=true&key=${process.env.GOOGLE_MAPS_API_KEY}`
     );
 
     const directionsData = await directionsResponse.json();

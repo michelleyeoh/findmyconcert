@@ -3,38 +3,12 @@
 import styles from "./page.module.scss";
 import { useEffect, useState } from "react";
 import { TbBrowserShare } from "react-icons/tb";
-
-type EventItem = {
-    id: string;
-    concertName: string;
-    artist: string;
-    date: string;
-    cheapestTicket: string;
-    parkingInfo: string;
-    ticketUrl?: string;
-    venue: {
-        name: string;
-        city: string;
-        state: string;
-        postalCode: string;
-        location: {
-            latitude: string;
-            longitude: string;
-        };
-    };
-    directions?: {
-        routes?: Array<{
-            legs?: Array<{
-                duration: { text: string };
-                distance: { text: string };
-            }>;
-        }>;
-    };
-};
+import { EventItem, TravelMode } from "../_types/event";
 
 export default function Discover() {
     const [events, setEvents] = useState<EventItem[]>([]);
     const [originZipcode, setOriginZipcode] = useState('');
+    const [travelMode, setTravelMode] = useState<TravelMode>('transit');
 
     useEffect(() => {
         const eventData = sessionStorage.getItem('eventData');
@@ -67,17 +41,52 @@ export default function Discover() {
                                     Buy Tickets
                                 </a>
                             )}
-                            {event.directions?.routes?.[0]?.legs?.[0] ? (
+
+                            <div className={styles.modeToggle}>
+                                <button
+                                    type="button"
+                                    onClick={() => setTravelMode('transit')}
+                                    className={`${styles.modeButton} ${travelMode === 'transit' ? styles.modeButtonActive : ''}`}
+                                >
+                                    Public Transport
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setTravelMode('driving')}
+                                    className={`${styles.modeButton} ${travelMode === 'driving' ? styles.modeButtonActive : ''}`}
+                                >
+                                    Drive
+                                </button>
+                            </div>
+
+                            {(travelMode === 'transit'
+                                ? event.directions?.transit?.routes?.[0]?.legs?.[0]
+                                : event.directions?.driving?.routes?.[0]?.legs?.[0]) ? (
                                 <div className={styles.routeSummary}>
-                                    <p>🚗 <strong>{event.directions.routes[0].legs[0].duration.text}</strong> drive ({event.directions.routes[0].legs[0].distance.text}): </p>
+                                    <p>
+                                        {travelMode === 'transit' ? '🚌' : '🚗'}{' '}
+                                        <strong>
+                                            {travelMode === 'transit'
+                                                ? event.directions?.transit?.routes?.[0]?.legs?.[0]?.duration.text
+                                                : event.directions?.driving?.routes?.[0]?.legs?.[0]?.duration.text}
+                                        </strong>{' '}
+                                        {travelMode === 'transit' ? 'by public transport' : 'drive'}
+                                        {' '}(
+                                        {travelMode === 'transit'
+                                            ? event.directions?.transit?.routes?.[0]?.legs?.[0]?.distance.text
+                                            : event.directions?.driving?.routes?.[0]?.legs?.[0]?.distance.text}
+                                        ):
+                                    </p>
                                     <a
-                                        href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originZipcode || event.venue.postalCode)}&destination=${event.venue.location.latitude},${event.venue.location.longitude}`}
+                                        href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originZipcode || event.venue.postalCode)}&destination=${event.venue.location.latitude},${event.venue.location.longitude}&travelmode=${travelMode}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className={styles.mapLink}
                                     >
                                         <TbBrowserShare /> {' '}
-                                        View Full Directions on Google Maps
+                                        {travelMode === 'transit'
+                                            ? 'View Full Public Transport Route on Google Maps'
+                                            : 'View Full Driving Route on Google Maps'}
                                     </a>
                                 </div>
                             ) : (
@@ -85,12 +94,15 @@ export default function Discover() {
                             )}
                         </div>
                         <div className={styles.mapPanel}>
-                            {event.directions?.routes?.[0]?.legs?.[0] ? (
+                            {(travelMode === 'transit'
+                                ? event.directions?.transit?.routes?.[0]?.legs?.[0]
+                                : event.directions?.driving?.routes?.[0]?.legs?.[0]) ? (
                                 <iframe
+                                    key={`${event.id}-${travelMode}`}
                                     className={styles.mapFrame}
                                     style={{ border: 0 }}
                                     referrerPolicy="no-referrer-when-downgrade"
-                                    src={`https://www.google.com/maps?q=${encodeURIComponent(`${originZipcode || event.venue.postalCode} to ${event.venue.location.latitude},${event.venue.location.longitude}`)}&output=embed`}
+                                    src={`https://www.google.com/maps?output=embed&f=d&source=s_d&saddr=${encodeURIComponent(originZipcode || event.venue.postalCode)}&daddr=${encodeURIComponent(`${event.venue.location.latitude},${event.venue.location.longitude}`)}&dirflg=${travelMode === 'transit' ? 'r' : 'd'}`}
                                     allowFullScreen
                                     loading="lazy"
                                     title={`Directions to ${event.venue.name}`}
