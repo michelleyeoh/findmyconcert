@@ -36,7 +36,7 @@ async function fetchEventDetails(eventId: string) {
   }
 }
 
-async function fetchDirections(zipcode: string, latitude: string, longitude: string) {
+async function fetchDirections(zipcode: string, latitude?: string, longitude?: string) {
   if (!latitude || !longitude) return { directions: 'Directions not available' };
 
   try {
@@ -60,7 +60,7 @@ async function fetchDirections(zipcode: string, latitude: string, longitude: str
   }
 }
 
-async function fetchVenueData(venueId: string) {
+async function fetchVenueData(venueId?: string) {
   if (!venueId) return { parkingInfo: 'Venue info not available' };
 
   try {
@@ -72,8 +72,20 @@ async function fetchVenueData(venueId: string) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function processEvent(event: any, zipcode: string) {
+type ProcessEventInput = {
+  id: string;
+  _embedded?: {
+    venues?: Array<{
+      id?: string;
+      location?: {
+        latitude?: string;
+        longitude?: string;
+      };
+    }>;
+  };
+};
+
+async function processEvent(event: ProcessEventInput, zipcode: string) {
   const venue = event._embedded?.venues?.[0];
 
   const [venueData, directionsData, eventDetails] = await Promise.all([

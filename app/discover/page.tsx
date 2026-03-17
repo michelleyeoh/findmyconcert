@@ -3,49 +3,12 @@
 import styles from "./page.module.scss";
 import { useEffect, useState } from "react";
 import { TbBrowserShare } from "react-icons/tb";
-
-type EventItem = {
-    id: string;
-    concertName: string;
-    artist: string;
-    date: string;
-    cheapestTicket: string;
-    parkingInfo: string;
-    ticketUrl?: string;
-    venue: {
-        name: string;
-        city: string;
-        state: string;
-        postalCode: string;
-        location: {
-            latitude: string;
-            longitude: string;
-        };
-    };
-    directions?: {
-        transit?: {
-            routes?: Array<{
-                legs?: Array<{
-                    duration: { text: string };
-                    distance: { text: string };
-                }>;
-            }>;
-        };
-        driving?: {
-            routes?: Array<{
-                legs?: Array<{
-                    duration: { text: string };
-                    distance: { text: string };
-                }>;
-            }>;
-        };
-    };
-};
+import { EventItem, TravelMode } from "../_types/event";
 
 export default function Discover() {
     const [events, setEvents] = useState<EventItem[]>([]);
     const [originZipcode, setOriginZipcode] = useState('');
-    const [travelMode, setTravelMode] = useState<'transit' | 'driving'>('transit');
+    const [travelMode, setTravelMode] = useState<TravelMode>('transit');
 
     useEffect(() => {
         const eventData = sessionStorage.getItem('eventData');

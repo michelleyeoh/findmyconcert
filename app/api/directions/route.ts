@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   try {
     const transitDepartureTime = validMode === 'transit' ? '&departure_time=now' : '';
     const directionsResponse = await fetch(
-      `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${latitude},${longitude}&mode=${validMode}${transitDepartureTime}&alternatives=true&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${latitude},${longitude}&mode=${validMode}${transitDepartureTime}&alternatives=true&key=${process.env.GOOGLE_MAPS_API_KEY}`
     );
 
     const directionsData = await directionsResponse.json();
