@@ -4,6 +4,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FiMapPin, FiSearch } from "react-icons/fi";
 
 export default function Home() {
   const router = useRouter();
@@ -80,17 +81,32 @@ export default function Home() {
         <p>or</p>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <label>
-            Artist:
-            <input type="text"
-              value={formData.artist}
-              onChange={(e) => setFormData({ ...formData, artist: e.target.value })} />
+          <label className={styles.formField}>
+            <span className={styles.formLabel}>Artist</span>
+            <div className={styles.inputShell}>
+              <FiSearch className={styles.inputIcon} aria-hidden="true" />
+              <input
+                className={styles.formInput}
+                type="text"
+                placeholder="BTS"
+                value={formData.artist}
+                onChange={(e) => setFormData({ ...formData, artist: e.target.value })}
+              />
+            </div>
           </label>
-          <label>
-            ZipCode:
-            <input type="text"
-              value={formData.zipcode}
-              onChange={(e) => setFormData({ ...formData, zipcode: e.target.value })} />
+          <label className={styles.formField}>
+            <span className={styles.formLabel}>ZipCode</span>
+            <div className={styles.inputShell}>
+              <FiMapPin className={styles.inputIcon} aria-hidden="true" />
+              <input
+                className={styles.formInput}
+                type="text"
+                inputMode="numeric"
+                placeholder="95616"
+                value={formData.zipcode}
+                onChange={(e) => setFormData({ ...formData, zipcode: e.target.value })}
+              />
+            </div>
           </label>
           <button type="submit" className={styles.primary}>Find Now!</button>
         </form>
