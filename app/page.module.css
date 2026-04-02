@@ -151,6 +151,27 @@ a.secondary {
   gap: 8px;
 }
 
+.artistPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chipContainer {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.artistChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 32px;
+  background: var(--gray-alpha-200);
+}
+
 .footer {
   grid-row-start: 3;
   display: flex;
