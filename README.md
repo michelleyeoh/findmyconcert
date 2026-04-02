@@ -1,5 +1,5 @@
 # Find My Concert
-🎶 Platform that helps college students discover and plan affordable concerts based on their favorite artists, location, and budget. 🎶
+Helping college students discover and plan affordable concerts based on their favorite artists, location, and budget ‧₊˚♪ 𝄞₊˚⊹
 
 ## ⚡ Quick Links
 
