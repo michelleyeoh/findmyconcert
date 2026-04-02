@@ -63,6 +63,7 @@ export default function Home() {
         router.push('/discover');
       } else {
         console.log('No events found');
+        router.push('/discover');
         //TODO: display not found popup
       }
     } catch (error) {
