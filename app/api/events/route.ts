@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ event: null });
     }
 
-    // Process event
+    // Process event with venue details, directions, and ticket info
     const processedEvent = await processEvent(events[0], zipcode);
 
     return NextResponse.json({ events: [processedEvent] });
