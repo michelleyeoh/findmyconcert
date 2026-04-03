@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Find My Concert",
-  description: "Discover concerts near you!",
+  "title": "Find My Concert",
+  "description": "Discover concerts near you!",
+  "icons": {
+    "icon": "/favicon.png",
+  },
 };
 
 export default function RootLayout({
