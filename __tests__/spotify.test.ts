@@ -49,7 +49,7 @@ describe('fetchWebApi', () => {
           grant_type: 'refresh_token',
           refresh_token: 'refresh-token',
         }),
-      }),
+      })
     );
 
     expect(fetchMock).toHaveBeenNthCalledWith(
@@ -61,7 +61,7 @@ describe('fetchWebApi', () => {
         },
         method: 'GET',
         body: JSON.stringify({ limit: 10 }),
-      },
+      }
     );
   });
 
@@ -89,7 +89,7 @@ describe('fetchWebApi', () => {
         },
         method: 'GET',
         body: undefined,
-      },
+      }
     );
   });
 });

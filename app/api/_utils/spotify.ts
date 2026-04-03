@@ -20,9 +20,13 @@ async function getAccessToken() {
   return response.json();
 }
 
-export async function fetchWebApi(endpoint: string, method: string, body?: Record<string, unknown>) {
+export async function fetchWebApi(
+  endpoint: string,
+  method: string,
+  body?: Record<string, unknown>
+) {
   const { access_token } = await getAccessToken();
-  
+
   const res = await fetch(`https://api.spotify.com/${endpoint}`, {
     headers: {
       Authorization: `Bearer ${access_token}`,
