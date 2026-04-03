@@ -12,7 +12,7 @@ export default function Home() {
     zipcode: '',
     artist: ''
   });
-  const [spotifyArtists, setSpotifyArtists] = useState<any[]>([]);
+  const [spotifyArtists, setSpotifyArtists] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSpotifySync = async (e: React.MouseEvent) => {

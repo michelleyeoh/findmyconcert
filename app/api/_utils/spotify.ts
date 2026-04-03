@@ -20,7 +20,7 @@ async function getAccessToken() {
   return response.json();
 }
 
-export async function fetchWebApi(endpoint: string, method: string, body?: any) {
+export async function fetchWebApi(endpoint: string, method: string, body?: Record<string, unknown>) {
   const { access_token } = await getAccessToken();
   
   const res = await fetch(`https://api.spotify.com/${endpoint}`, {
