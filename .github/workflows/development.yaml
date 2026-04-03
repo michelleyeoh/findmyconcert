@@ -28,6 +28,9 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
+      - name: Run tests
+        run: npm test
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 

@@ -12,6 +12,27 @@ export default function Home() {
     zipcode: '',
     artist: ''
   });
+  const [spotifyArtists, setSpotifyArtists] = useState<{ id: string; name: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSpotifySync = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/spotify/top-artists');
+      const data = await res.json();
+      setSpotifyArtists(data);
+    } catch (err) {
+      console.error("Spotify sync failed", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const selectArtist = (name: string) => {
+    setFormData(prev => ({ ...prev, artist: name }));
+    setSpotifyArtists([]);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,7 +63,7 @@ export default function Home() {
         router.push('/discover');
       } else {
         console.log('No events found');
-        //TODO: display not found popup
+        router.push('/discover');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -62,9 +83,7 @@ export default function Home() {
 
         <div className={styles.ctas}>
           <a
-            href="https://localhost:3000"
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={handleSpotifySync}
             className={styles.secondary}
           >
             <Image
@@ -74,9 +93,27 @@ export default function Home() {
               width={20}
               height={20}
             />
-            Sync with Spotify
+            {isLoading ? 'Syncing...' : 'Sync with Spotify'}
           </a>
         </div>
+
+        {spotifyArtists.length > 0 && (
+          <div className={styles.artistPicker}>
+            <h3>Select an artist:</h3>
+            <div className={styles.chipContainer}>
+              {spotifyArtists.map(artist => (
+                <button 
+                type="button"
+                  key={artist.id} 
+                  onClick={() => selectArtist(artist.name)}
+                  className={styles.artistChip}
+                >
+                  {artist.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <p>or</p>
 
