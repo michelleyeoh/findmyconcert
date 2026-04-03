@@ -67,9 +67,9 @@
 }
 
 .modeButton {
-    border: 1px solid #cbd5e1;
-    background: #f8fafc;
-    color: #334155;
+    background-color: black;
+    border: 1px solid #ffffff;
+    color: #ffffff;
     padding: 0.6rem 1.2rem;
     border-radius: 999px;
     font-size: 0.82rem;
@@ -78,15 +78,21 @@
 }
 
 .modeButtonActive {
-    background-color: black;
-    border: 1px solid #ffffff;
-    color: #ffffff;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #334155;
 }
 
 .mapLink {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 0.25rem;
+    align-items: flex-start;
+}
+
+.mapLinkIcon {
+    width: 16px;
+    height: 16px;
 }
 
 .noMap {

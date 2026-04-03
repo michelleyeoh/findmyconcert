@@ -107,7 +107,7 @@ export default function Discover() {
                     rel="noopener noreferrer"
                     className={styles.mapLink}
                   >
-                    <TbBrowserShare />{' '}
+                    <TbBrowserShare className={styles.mapLinkIcon} />{' '}
                     {travelMode === 'transit'
                       ? 'View Full Public Transport Route on Google Maps'
                       : 'View Full Driving Route on Google Maps'}

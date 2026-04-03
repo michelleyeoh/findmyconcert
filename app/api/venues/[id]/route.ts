@@ -19,7 +19,10 @@ export async function GET(
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch venue details from Ticketmaster API`);
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to fetch venue details from Ticketmaster API: ${response.status} ${response.statusText}. ${errorText}`
+      );
     }
 
     const venueData = await response.json();
