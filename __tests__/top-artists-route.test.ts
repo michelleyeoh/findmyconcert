@@ -32,10 +32,7 @@ describe('GET /api/spotify/top-artists', () => {
 
     const response = await GET();
 
-    expect(fetchWebApiMock).toHaveBeenCalledWith(
-      'v1/me/top/artists?limit=10',
-      'GET'
-    );
+    expect(fetchWebApiMock).toHaveBeenCalledWith('v1/me/top/artists?limit=10');
     expect(jsonMock).toHaveBeenCalledWith([
       { id: 'artist-1' },
       { id: 'artist-2' },
@@ -53,10 +50,7 @@ describe('GET /api/spotify/top-artists', () => {
 
     const response = await GET();
 
-    expect(fetchWebApiMock).toHaveBeenCalledWith(
-      'v1/me/top/artists?limit=10',
-      'GET'
-    );
+    expect(fetchWebApiMock).toHaveBeenCalledWith('v1/me/top/artists?limit=10');
     expect(jsonMock).toHaveBeenCalledWith(
       { error: 'Failed to fetch' },
       { status: 500 }
