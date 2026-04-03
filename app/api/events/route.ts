@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { EventDetails, ProcessEventInput, Venue, EventDirections } from '../../_types/event';
 
-function eventData(event: any, venue: any, parkingInfo: string, directions: any, eventDetails: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+function eventData(event: ProcessEventInput, venue: Venue | undefined, parkingInfo: string, directions: EventDirections, eventDetails: EventDetails) {
   return {
     id: event.id,
     concertName: event.name,
@@ -71,19 +72,6 @@ async function fetchVenueData(venueId?: string) {
     return { parkingInfo: 'Parking info not available' };
   }
 }
-
-type ProcessEventInput = {
-  id: string;
-  _embedded?: {
-    venues?: Array<{
-      id?: string;
-      location?: {
-        latitude?: string;
-        longitude?: string;
-      };
-    }>;
-  };
-};
 
 async function processEvent(event: ProcessEventInput, zipcode: string) {
   const venue = event._embedded?.venues?.[0];
