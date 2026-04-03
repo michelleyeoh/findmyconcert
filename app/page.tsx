@@ -93,7 +93,7 @@ export default function Home() {
               width={20}
               height={20}
             />
-            {isLoading ? 'Syncing...' : 'Sync with Spotify'}
+            {isLoading ? 'Syncing...' : 'Sync with michelle\'s Spotify'}
           </a>
         </div>
 
