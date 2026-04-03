@@ -31,7 +31,7 @@ describe('fetchWebApi', () => {
     global.fetch = fetchMock as unknown as typeof fetch;
 
     const { fetchWebApi } = await import(testingFilePath);
-    const result = await fetchWebApi('v1/me/top/artists', 'GET', { limit: 10 });
+    const result = await fetchWebApi('v1/me/top/artists');
 
     expect(result).toEqual({ ok: true });
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -60,7 +60,6 @@ describe('fetchWebApi', () => {
           Authorization: 'Bearer abc123',
         },
         method: 'GET',
-        body: JSON.stringify({ limit: 10 }),
       }
     );
   });
@@ -78,7 +77,7 @@ describe('fetchWebApi', () => {
     global.fetch = fetchMock as unknown as typeof fetch;
 
     const { fetchWebApi } = await import(testingFilePath);
-    await fetchWebApi('v1/me', 'GET');
+    await fetchWebApi('v1/me');
 
     expect(fetchMock).toHaveBeenNthCalledWith(
       2,

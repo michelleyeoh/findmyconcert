@@ -4,6 +4,7 @@ const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN;
 
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 
+// Get a new access token using the refresh token (60 minutes expiration)
 async function getAccessToken() {
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
@@ -20,19 +21,15 @@ async function getAccessToken() {
   return response.json();
 }
 
-export async function fetchWebApi(
-  endpoint: string,
-  method: string,
-  body?: Record<string, unknown>
-) {
+// GET helper to fetch from Spotify Web API
+export async function fetchWebApi(endpoint: string) {
   const { access_token } = await getAccessToken();
 
   const res = await fetch(`https://api.spotify.com/${endpoint}`, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
-    method,
-    body: body ? JSON.stringify(body) : undefined,
+    method: 'GET',
   });
   return await res.json();
 }
