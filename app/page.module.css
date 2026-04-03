@@ -111,7 +111,8 @@
 }
 
 .ctas a,
-button.primary {
+button.primary,
+.artistChip {
   appearance: none;
   border-radius: 128px;
   height: 48px;
@@ -151,6 +152,14 @@ a.secondary {
   gap: 8px;
 }
 
+.artistChip {
+  background: transparent;
+  color: inherit;
+  border-color: var(--gray-alpha-200);
+  font-family: inherit;
+  gap: 8px;
+}
+
 .artistPicker {
   display: flex;
   flex-direction: column;
@@ -161,15 +170,6 @@ a.secondary {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-}
-
-.artistChip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 32px;
-  background: var(--gray-alpha-200);
 }
 
 .footer {
@@ -198,6 +198,11 @@ a.secondary {
   }
 
   a.secondary:hover {
+    background: var(--button-secondary-hover);
+    border-color: transparent;
+  }
+
+  .artistChip:hover {
     background: var(--button-secondary-hover);
     border-color: transparent;
   }

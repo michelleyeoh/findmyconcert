@@ -29,6 +29,9 @@ jobs:
         run: |
           printf "${{ secrets.TICKETMASTER_KEY }}" | vercel env add TICKETMASTER_KEY production --force --token=${{ secrets.VERCEL_TOKEN }}
           printf "${{ secrets.GOOGLE_MAPS_API_KEY }}" | vercel env add GOOGLE_MAPS_API_KEY production --force --token=${{ secrets.VERCEL_TOKEN }}
+          printf "${{ secrets.SPOTIFY_CLIENT_ID }}" | vercel env add SPOTIFY_CLIENT_ID production --force --token=${{ secrets.VERCEL_TOKEN }}
+          printf "${{ secrets.SPOTIFY_CLIENT_SECRET }}" | vercel env add SPOTIFY_CLIENT_SECRET production --force --token=${{ secrets.VERCEL_TOKEN }}
+          printf "${{ secrets.SPOTIFY_REFRESH_TOKEN }}" | vercel env add SPOTIFY_REFRESH_TOKEN production --force --token=${{ secrets.VERCEL_TOKEN }}
           printf "${{ vars.DOMAIN_URL }}" | vercel env add BASE_URL production --force --token=${{ secrets.VERCEL_TOKEN }}
 
         env:
