@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const ORIGINAL_ENV = { ...process.env };
 
+const testingFilePath = 'app/api/_utils/spotify.ts';
+
 describe('fetchWebApi', () => {
   beforeEach(() => {
     vi.resetModules();
@@ -28,7 +30,7 @@ describe('fetchWebApi', () => {
 
     global.fetch = fetchMock as unknown as typeof fetch;
 
-    const { fetchWebApi } = await import('./spotify');
+    const { fetchWebApi } = await import(testingFilePath);
     const result = await fetchWebApi('v1/me/top/artists', 'GET', { limit: 10 });
 
     expect(result).toEqual({ ok: true });
@@ -75,7 +77,7 @@ describe('fetchWebApi', () => {
 
     global.fetch = fetchMock as unknown as typeof fetch;
 
-    const { fetchWebApi } = await import('./spotify');
+    const { fetchWebApi } = await import(testingFilePath);
     await fetchWebApi('v1/me', 'GET');
 
     expect(fetchMock).toHaveBeenNthCalledWith(
