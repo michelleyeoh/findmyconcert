@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   "title": "Find My Concert",
   "description": "Discover concerts near you!",
   "icons": {
-    "icon": "/favicon.png",
+    "icon": "/favicon.svg",
   },
 };
 
