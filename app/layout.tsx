@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Find My Concert",
-  description: "Discover concerts near you!",
-  icons: {
-    icon: "/favicon.ico",
+  "title": "Find My Concert",
+  "description": "Discover concerts near you!",
+  "icons": {
+    "icon": "/favicon.png",
   },
 };
 
