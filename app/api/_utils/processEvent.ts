@@ -93,7 +93,12 @@ async function fetchVenueData(venueId?: string): Promise<string> {
   try {
     const baseUrl = process.env.BASE_URL;
     const response = await fetch(`${baseUrl}/api/venues/${venueId}`);
-    return await response.json();
+    const venueData = await response.json();
+
+    // If response is a string, return it directly, otherwise extract parkingInfo from the object
+    return typeof venueData === 'string'
+      ? venueData
+      : venueData?.parkingInfo || 'Parking info not available';
   } catch {
     return 'Parking info not available';
   }
