@@ -3,6 +3,7 @@ import {
   ProcessEventInput,
   Venue,
   EventDirections,
+  EventItem,
 } from '../../_types/event';
 
 // Helper function to structure event data return
@@ -12,22 +13,22 @@ function eventData(
   parkingInfo: string,
   directions: EventDirections,
   eventDetails: EventDetails
-) {
+): EventItem {
   return {
     id: event.id,
     concertName: event.name,
     artist: event._embedded?.attractions?.[0]?.name || event.name,
-    date: event.dates?.start?.localDate,
+    date: event.dates?.start?.localDate || 'Date not available',
     time: event.dates?.start?.localTime,
     venue: {
-      name: venue?.name,
+      name: venue?.name || 'Venue not available',
       address: venue?.address?.line1,
-      city: venue?.city?.name,
-      state: venue?.state?.stateCode,
-      postalCode: venue?.postalCode,
+      city: venue?.city?.name || 'City not available',
+      state: venue?.state?.stateCode || 'State not available',
+      postalCode: venue?.postalCode || 'Postal code not available',
       location: {
-        latitude: venue?.location?.latitude,
-        longitude: venue?.location?.longitude,
+        latitude: venue?.location?.latitude || 'Latitude not available',
+        longitude: venue?.location?.longitude || 'Longitude not available',
       },
     },
     ticketUrl: eventDetails.url,

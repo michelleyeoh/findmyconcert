@@ -45,6 +45,7 @@ export interface Venue {
   };
 }
 
+// Custom type for processed event data
 export interface EventItem {
   id: string;
   concertName: string;
