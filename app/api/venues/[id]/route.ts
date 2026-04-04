@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Input: GET /api/venues/[id]
+// Output: JSON with parking info for the venue
 export async function GET(
   _: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+): Promise<NextResponse> {
   const { id: venueId } = await params;
 
   if (!venueId) {
@@ -28,7 +30,7 @@ export async function GET(
     const venueData = await response.json();
     const parkingInfo = venueData.parkingDetail || 'Parking info not available';
 
-    return NextResponse.json({ venue: venueData, parkingInfo });
+    return NextResponse.json({ parkingInfo });
   } catch (error) {
     console.error('Error fetching data:', error);
     return NextResponse.json(

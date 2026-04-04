@@ -18,9 +18,7 @@ describe('processEvent', () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce({
-        json: async () => ({
-          parkingInfo: 'Garage parking available',
-        }),
+        json: async () => 'Garage parking available',
       })
       .mockResolvedValueOnce({
         json: async () => ({
@@ -206,9 +204,7 @@ describe('processEvent', () => {
       cheapestTicket: 'Price TBA',
       parkingInfo: 'Venue info not available',
       distance: null,
-      directions: {
-        directions: 'Directions not available',
-      },
+      directions: {},
     });
   });
 });

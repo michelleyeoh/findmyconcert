@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { RouteInfo } from '@/app/_types/event';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const origin = searchParams.get('origin');
   const latitude = searchParams.get('latitude');
@@ -23,8 +24,11 @@ export async function GET(request: NextRequest) {
     );
 
     const directionsData = await directionsResponse.json();
-    console.log(directionsData);
-    return NextResponse.json({ routes: directionsData.routes || [] }); // returns all the routes
+    const payload: { routes: RouteInfo[] } = {
+      routes: directionsData.routes || [],
+    };
+
+    return NextResponse.json(payload); // returns all the routes
   } catch (error) {
     console.error('Error fetching data:', error);
     return NextResponse.json(

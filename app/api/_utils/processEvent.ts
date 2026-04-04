@@ -40,7 +40,7 @@ function eventData(
 }
 
 // Helper function to fetch event details including cheapest ticket info based on event ID
-async function fetchEventDetails(eventId: string) {
+async function fetchEventDetails(eventId: string): Promise<EventDetails> {
   try {
     const baseUrl = process.env.BASE_URL;
     const response = await fetch(`${baseUrl}/api/event-details/${eventId}`);
@@ -58,9 +58,8 @@ async function fetchDirections(
   zipcode: string,
   latitude?: string,
   longitude?: string
-) {
-  if (!latitude || !longitude)
-    return { directions: 'Directions not available' };
+): Promise<EventDirections> {
+  if (!latitude || !longitude) return {};
 
   try {
     const baseUrl = process.env.BASE_URL;
@@ -83,20 +82,20 @@ async function fetchDirections(
       driving: drivingDirections,
     };
   } catch {
-    return { directions: 'Direction info not available' };
+    return {};
   }
 }
 
-// Helper function to fetch venue details including parking info based on venue ID
-async function fetchVenueData(venueId?: string) {
-  if (!venueId) return { parkingInfo: 'Venue info not available' };
+// Helper function to fetch parking info based on venue ID
+async function fetchVenueData(venueId?: string): Promise<string> {
+  if (!venueId) return 'Venue info not available';
 
   try {
     const baseUrl = process.env.BASE_URL;
     const response = await fetch(`${baseUrl}/api/venues/${venueId}`);
     return await response.json();
   } catch {
-    return { parkingInfo: 'Parking info not available' };
+    return 'Parking info not available';
   }
 }
 
@@ -104,7 +103,7 @@ async function fetchVenueData(venueId?: string) {
 export async function processEvent(event: ProcessEventInput, zipcode: string) {
   const venue = event._embedded?.venues?.[0];
 
-  const [venueData, directionsData, eventDetails] = await Promise.all([
+  const [parkingInfo, directionsData, eventDetails] = await Promise.all([
     fetchVenueData(venue?.id),
     fetchDirections(
       zipcode,
@@ -114,11 +113,5 @@ export async function processEvent(event: ProcessEventInput, zipcode: string) {
     fetchEventDetails(event.id),
   ]);
 
-  return eventData(
-    event,
-    venue,
-    venueData.parkingInfo,
-    directionsData,
-    eventDetails
-  );
+  return eventData(event, venue, parkingInfo, directionsData, eventDetails);
 }
