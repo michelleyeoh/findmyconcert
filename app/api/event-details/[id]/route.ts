@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { EventDetails } from '@/app/_types/event';
 
+// Input: GET /api/event-details/[id]
+// Output: JSON with event details including cheapest ticket and URL
 export async function GET(
   _: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+): Promise<NextResponse> {
   const { id: eventId } = await params;
 
   if (!eventId) {
@@ -28,11 +31,12 @@ export async function GET(
       status === 'onsale' && data.priceRanges?.[0]?.min
         ? `$${data.priceRanges[0].min}`
         : 'Tickets not on sale';
-
-    return NextResponse.json({
+    const payload: EventDetails = {
       cheapestTicket,
       url: data.url || 'URL not available',
-    });
+    };
+
+    return NextResponse.json(payload);
   } catch (error) {
     console.error('Error fetching data:', error);
     return NextResponse.json(

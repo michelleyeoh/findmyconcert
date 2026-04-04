@@ -18,9 +18,7 @@ describe('processEvent', () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce({
-        json: async () => ({
-          parkingInfo: 'Garage parking available',
-        }),
+        json: async () => 'Garage parking available',
       })
       .mockResolvedValueOnce({
         json: async () => ({
@@ -189,7 +187,7 @@ describe('processEvent', () => {
       id: 'event-2',
       concertName: 'Fallback Show',
       artist: 'Fallback Show',
-      date: undefined,
+      date: 'Date not available',
       time: undefined,
       venue: {
         name: 'Unknown Venue',
@@ -198,17 +196,15 @@ describe('processEvent', () => {
         state: 'NA',
         postalCode: '00000',
         location: {
-          latitude: undefined,
-          longitude: undefined,
+          latitude: 'Latitude not available',
+          longitude: 'Longitude not available',
         },
       },
       ticketUrl: 'https://www.ticketmaster.com/event/event-2',
       cheapestTicket: 'Price TBA',
       parkingInfo: 'Venue info not available',
       distance: null,
-      directions: {
-        directions: 'Directions not available',
-      },
+      directions: {},
     });
   });
 });

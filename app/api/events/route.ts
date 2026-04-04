@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { processEvent } from '../_utils/processEvent';
+import { EventItem } from '@/app/_types/event';
 
-export async function GET(request: NextRequest) {
+type EventsPayload = {
+  events: EventItem[];
+};
+
+//  Input: GET /api/events?artist=ARTIST_NAME&latitude=LATITUDE&longitude=LONGITUDE&zipcode=ZIPCODE
+//  Output: JSON with event details, venue parking info, and directions for transit and driving
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const artist = searchParams.get('artist');
   const latitude = searchParams.get('latitude');
@@ -29,13 +36,17 @@ export async function GET(request: NextRequest) {
     const events = data._embedded?.events;
 
     if (!events || events.length === 0) {
-      return NextResponse.json({ event: null });
+      const payload: EventsPayload = { events: [] };
+      return NextResponse.json(payload);
     }
 
     // Process event with venue details, directions, and ticket info
     const processedEvent = await processEvent(events[0], zipcode);
+    const payload: EventsPayload = {
+      events: [processedEvent],
+    };
 
-    return NextResponse.json({ events: [processedEvent] });
+    return NextResponse.json(payload);
   } catch (error) {
     console.error('Error fetching data:', error);
     return NextResponse.json(

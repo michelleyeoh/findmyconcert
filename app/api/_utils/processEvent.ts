@@ -3,6 +3,7 @@ import {
   ProcessEventInput,
   Venue,
   EventDirections,
+  EventItem,
 } from '../../_types/event';
 
 // Helper function to structure event data return
@@ -12,22 +13,22 @@ function eventData(
   parkingInfo: string,
   directions: EventDirections,
   eventDetails: EventDetails
-) {
+): EventItem {
   return {
     id: event.id,
     concertName: event.name,
     artist: event._embedded?.attractions?.[0]?.name || event.name,
-    date: event.dates?.start?.localDate,
+    date: event.dates?.start?.localDate || 'Date not available',
     time: event.dates?.start?.localTime,
     venue: {
-      name: venue?.name,
+      name: venue?.name || 'Venue not available',
       address: venue?.address?.line1,
-      city: venue?.city?.name,
-      state: venue?.state?.stateCode,
-      postalCode: venue?.postalCode,
+      city: venue?.city?.name || 'City not available',
+      state: venue?.state?.stateCode || 'State not available',
+      postalCode: venue?.postalCode || 'Postal code not available',
       location: {
-        latitude: venue?.location?.latitude,
-        longitude: venue?.location?.longitude,
+        latitude: venue?.location?.latitude || 'Latitude not available',
+        longitude: venue?.location?.longitude || 'Longitude not available',
       },
     },
     ticketUrl: eventDetails.url,
@@ -39,7 +40,7 @@ function eventData(
 }
 
 // Helper function to fetch event details including cheapest ticket info based on event ID
-async function fetchEventDetails(eventId: string) {
+async function fetchEventDetails(eventId: string): Promise<EventDetails> {
   try {
     const baseUrl = process.env.BASE_URL;
     const response = await fetch(`${baseUrl}/api/event-details/${eventId}`);
@@ -57,9 +58,8 @@ async function fetchDirections(
   zipcode: string,
   latitude?: string,
   longitude?: string
-) {
-  if (!latitude || !longitude)
-    return { directions: 'Directions not available' };
+): Promise<EventDirections> {
+  if (!latitude || !longitude) return {};
 
   try {
     const baseUrl = process.env.BASE_URL;
@@ -82,20 +82,25 @@ async function fetchDirections(
       driving: drivingDirections,
     };
   } catch {
-    return { directions: 'Direction info not available' };
+    return {};
   }
 }
 
-// Helper function to fetch venue details including parking info based on venue ID
-async function fetchVenueData(venueId?: string) {
-  if (!venueId) return { parkingInfo: 'Venue info not available' };
+// Helper function to fetch parking info based on venue ID
+async function fetchVenueData(venueId?: string): Promise<string> {
+  if (!venueId) return 'Venue info not available';
 
   try {
     const baseUrl = process.env.BASE_URL;
     const response = await fetch(`${baseUrl}/api/venues/${venueId}`);
-    return await response.json();
+    const venueData = await response.json();
+
+    // If response is a string, return it directly, otherwise extract parkingInfo from the object
+    return typeof venueData === 'string'
+      ? venueData
+      : venueData?.parkingInfo || 'Parking info not available';
   } catch {
-    return { parkingInfo: 'Parking info not available' };
+    return 'Parking info not available';
   }
 }
 
@@ -103,7 +108,7 @@ async function fetchVenueData(venueId?: string) {
 export async function processEvent(event: ProcessEventInput, zipcode: string) {
   const venue = event._embedded?.venues?.[0];
 
-  const [venueData, directionsData, eventDetails] = await Promise.all([
+  const [parkingInfo, directionsData, eventDetails] = await Promise.all([
     fetchVenueData(venue?.id),
     fetchDirections(
       zipcode,
@@ -113,11 +118,5 @@ export async function processEvent(event: ProcessEventInput, zipcode: string) {
     fetchEventDetails(event.id),
   ]);
 
-  return eventData(
-    event,
-    venue,
-    venueData.parkingInfo,
-    directionsData,
-    eventDetails
-  );
+  return eventData(event, venue, parkingInfo, directionsData, eventDetails);
 }
