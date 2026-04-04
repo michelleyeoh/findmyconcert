@@ -1,77 +1,20 @@
-'use client'
+'use client';
 
-import Image from "next/image";
-import styles from "./page.module.css";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { FiMapPin, FiSearch } from "react-icons/fi";
+import Image from 'next/image';
+import styles from './page.module.css';
+import { FiMapPin, FiSearch } from 'react-icons/fi';
+import { useEventSearch } from './_hooks/useEventSearch';
 
 export default function Home() {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    zipcode: '',
-    artist: ''
-  });
-  const [spotifyArtists, setSpotifyArtists] = useState<{ id: string; name: string }[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSpotifySync = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const res = await fetch('/api/spotify/top-artists');
-      const data = await res.json();
-      setSpotifyArtists(data);
-    } catch (err) {
-      console.error("Spotify sync failed", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const selectArtist = (name: string) => {
-    setFormData(prev => ({ ...prev, artist: name }));
-    setSpotifyArtists([]);
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!formData.artist.trim() || !formData.zipcode.trim()) {
-      alert('Please enter both artist and zipcode!');
-    return;
-  }
-
-    let latitude: string = '';
-    let longitude: string = '';
-    try {
-      const response = await fetch(`https://api.zippopotam.us/us/${formData.zipcode}`);
-      const data = await response.json();
-      latitude = data.places[0].latitude;
-      longitude = data.places[0].longitude;
-      console.log(latitude, longitude);
-    } catch (error) {
-      console.error('Error fetching zipcode:', error);
-    }
-
-    try {
-      const response = await fetch(`/api/events?artist=${formData.artist}&zipcode=${formData.zipcode}&latitude=${latitude}&longitude=${longitude}`);
-      const data = await response.json();
-
-      if (data.events && data.events.length > 0) {
-        sessionStorage.setItem('eventData', JSON.stringify(data.events));
-        sessionStorage.setItem('originZipcode', formData.zipcode);
-        router.push('/discover');
-      } else {
-        console.log('No events found');
-        router.push('/discover');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-
-    //reset form
-    setFormData({ zipcode: '', artist: '' });
-  }
+  const {
+    formData,
+    spotifyArtists,
+    isLoading,
+    handleInputChange,
+    handleSpotifySync,
+    selectArtist,
+    handleSubmit,
+  } = useEventSearch();
 
   return (
     <div className={styles.page}>
@@ -82,10 +25,7 @@ export default function Home() {
         </div>
 
         <div className={styles.ctas}>
-          <a
-            onClick={handleSpotifySync}
-            className={styles.secondary}
-          >
+          <a onClick={handleSpotifySync} className={styles.secondary}>
             <Image
               className={styles.logo}
               src="/spotify_logo.png"
@@ -93,7 +33,7 @@ export default function Home() {
               width={20}
               height={20}
             />
-            {isLoading ? 'Syncing...' : 'Sync with Spotify'}
+            {isLoading ? 'Syncing...' : "Sync with michelle's Spotify"}
           </a>
         </div>
 
@@ -101,10 +41,10 @@ export default function Home() {
           <div className={styles.artistPicker}>
             <h3>Select an artist:</h3>
             <div className={styles.chipContainer}>
-              {spotifyArtists.map(artist => (
-                <button 
-                type="button"
-                  key={artist.id} 
+              {spotifyArtists.map((artist) => (
+                <button
+                  type="button"
+                  key={artist.id}
                   onClick={() => selectArtist(artist.name)}
                   className={styles.artistChip}
                 >
@@ -127,7 +67,7 @@ export default function Home() {
                 type="text"
                 placeholder="BTS"
                 value={formData.artist}
-                onChange={(e) => setFormData({ ...formData, artist: e.target.value })}
+                onChange={(e) => handleInputChange('artist', e.target.value)}
               />
             </div>
           </label>
@@ -141,11 +81,13 @@ export default function Home() {
                 inputMode="numeric"
                 placeholder="95616"
                 value={formData.zipcode}
-                onChange={(e) => setFormData({ ...formData, zipcode: e.target.value })}
+                onChange={(e) => handleInputChange('zipcode', e.target.value)}
               />
             </div>
           </label>
-          <button type="submit" className={styles.primary}>Find Now!</button>
+          <button type="submit" className={styles.primary}>
+            Find Now!
+          </button>
         </form>
       </main>
       <footer className={styles.footer}>

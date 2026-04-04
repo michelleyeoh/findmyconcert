@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const fetchWebApiMock = vi.fn();
-const jsonMock = vi.fn((data: unknown, init?: { status?: number }) => ({ data, init }));
+const jsonMock = vi.fn((data: unknown, init?: { status?: number }) => ({
+  data,
+  init,
+}));
 
 const routeFilePath = '../app/api/spotify/top-artists/route';
 
@@ -29,8 +32,11 @@ describe('GET /api/spotify/top-artists', () => {
 
     const response = await GET();
 
-    expect(fetchWebApiMock).toHaveBeenCalledWith('v1/me/top/artists?limit=10', 'GET');
-    expect(jsonMock).toHaveBeenCalledWith([{ id: 'artist-1' }, { id: 'artist-2' }]);
+    expect(fetchWebApiMock).toHaveBeenCalledWith('v1/me/top/artists?limit=10');
+    expect(jsonMock).toHaveBeenCalledWith([
+      { id: 'artist-1' },
+      { id: 'artist-2' },
+    ]);
     expect(response).toEqual({
       data: [{ id: 'artist-1' }, { id: 'artist-2' }],
       init: undefined,
@@ -44,8 +50,11 @@ describe('GET /api/spotify/top-artists', () => {
 
     const response = await GET();
 
-    expect(fetchWebApiMock).toHaveBeenCalledWith('v1/me/top/artists?limit=10', 'GET');
-    expect(jsonMock).toHaveBeenCalledWith({ error: 'Failed to fetch' }, { status: 500 });
+    expect(fetchWebApiMock).toHaveBeenCalledWith('v1/me/top/artists?limit=10');
+    expect(jsonMock).toHaveBeenCalledWith(
+      { error: 'Failed to fetch' },
+      { status: 500 }
+    );
     expect(response).toEqual({
       data: { error: 'Failed to fetch' },
       init: { status: 500 },

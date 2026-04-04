@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run"
   },
   "dependencies": {
@@ -23,7 +24,10 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
+    "eslint-config-prettier": "^10.1.2",
     "eslint-config-next": "15.5.5",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.3",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }

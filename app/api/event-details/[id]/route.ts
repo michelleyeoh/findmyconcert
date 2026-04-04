@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  _: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id: eventId } = await params;
 
   if (!eventId) {
-    return NextResponse.json({ error: 'Event ID is required' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Event ID is required' },
+      { status: 400 }
+    );
   }
 
   try {
@@ -18,16 +24,20 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
 
     const data = await response.json();
     const status = data.dates?.status?.code;
-    const cheapestTicket = status === 'onsale' && data.priceRanges?.[0]?.min
-      ? `$${data.priceRanges[0].min}`
-      : 'Tickets not on sale';
+    const cheapestTicket =
+      status === 'onsale' && data.priceRanges?.[0]?.min
+        ? `$${data.priceRanges[0].min}`
+        : 'Tickets not on sale';
 
     return NextResponse.json({
       cheapestTicket,
-      url: data.url || 'URL not available'
+      url: data.url || 'URL not available',
     });
   } catch (error) {
     console.error('Error fetching data:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
