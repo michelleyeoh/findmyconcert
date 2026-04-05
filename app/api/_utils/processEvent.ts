@@ -34,7 +34,7 @@ function eventData(
     ticketUrl: eventDetails.url,
     cheapestTicket: eventDetails.cheapestTicket,
     parkingInfo,
-    distance: event.distance || null,
+    distance: event.distance,
     directions,
   };
 }

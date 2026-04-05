@@ -203,7 +203,7 @@ describe('processEvent', () => {
       ticketUrl: 'https://www.ticketmaster.com/event/event-2',
       cheapestTicket: 'Price TBA',
       parkingInfo: 'Venue info not available',
-      distance: null,
+      distance: undefined,
       directions: {},
     });
   });

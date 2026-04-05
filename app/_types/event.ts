@@ -54,7 +54,7 @@ export interface EventItem {
   time?: string;
   cheapestTicket: string;
   parkingInfo: string;
-  distance?: string | null;
+  distance?: string;
   ticketUrl?: string;
   venue: {
     name: string;
